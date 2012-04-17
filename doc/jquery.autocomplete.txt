@@ -137,6 +137,9 @@ decorateResults (default value: null)
 	that will contain that "ul" element. Function should not change "ul" element as there are event
 	handlers bound to it and some function relying on "ul" markup.
 
+showEmptyResults (default value: false)
+    If set to true, the autocompleter will show even if no results were matched.
+
 onItemSelect (default value: null)
 	A JavaScript function that will be called when an item is selected. The autocompleter will
 	specify a single argument, being the LI element selected. This LI element will have an

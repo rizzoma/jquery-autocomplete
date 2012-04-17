@@ -66,6 +66,7 @@
         selectOnly: false,
         showResult: null,
         decorateResults: null,
+        showEmptyResults: false,
         preventDefaultReturn: true,
         preventDefaultTab: false,
         autoFill: false,
@@ -795,7 +796,7 @@
         var $ul = this.dom.$list = $('<ul></ul>');
         var i, result, $li, autoWidth, first = false, $first = false;
 
-        if (numResults) {
+        if (numResults || this.options.showEmptyResults) {
             for (i = 0; i < numResults; i++) {
                 result = results[i];
                 $li = this.createItemFromResult(result);
