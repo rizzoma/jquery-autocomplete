@@ -363,20 +363,22 @@
 
                 case 9: // tab
                     if (self.active_) {
-                        self.selectCurrent();
-                        if (self.options.preventDefaultTab) {
-                            e.preventDefault();
-                            return false;
+                        if (self.selectCurrent()) {
+                            if (self.options.preventDefaultTab) {
+                                e.preventDefault();
+                                return false;
+                            }
                         }
                     }
                 break;
 
                 case 13: // return
                     if (self.active_) {
-                        self.selectCurrent();
-                        if (self.options.preventDefaultReturn) {
-                            e.preventDefault();
-                            return false;
+                        if (self.selectCurrent()) {
+                            if (self.options.preventDefaultReturn) {
+                                e.preventDefault();
+                                return false;
+                            }
                         }
                     }
                 break;
@@ -908,6 +910,7 @@
         var $item = $('li.' + this.selectClass_, this.dom.$results);
         if ($item.length === 1) {
             this.selectItem($item);
+            return true;
         } else {
             this.deactivate(false);
         }
