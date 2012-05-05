@@ -198,6 +198,14 @@ getData  (default value: null)
     Function which return data to be processed. If several sources are present, then data is fetched
     in following order: "data" option, "getData" option call, ajax query to remote url.
 
+resultsContainer (default value: null)
+    HTML element which will contain autocomplete. It will be created and appended to body if not provided.
+    Contains of this element is replaced with new autocomplete elements each time autocomplete shows up.
+
+autoPosition (default value: true)
+    Whether to position container of autocomplete automatically or not. If set to true, it will be aligned
+    right under input.
+
 More advanced options :
 =======================
 

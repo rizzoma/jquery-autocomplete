@@ -83,7 +83,8 @@
         delimiterChar: ',',
         delimiterKeyCode: 188,
         processData: null,
-        getData: null
+        getData: null,
+        autoPosition: true        
     };
 
     /**
@@ -314,13 +315,20 @@
          */
         this.dom.$elem.attr('autocomplete', 'off').addClass(this.options.inputClass);
 
-        /**
-         * Create DOM element to hold results, and force absolute position
-         */
-        this.dom.$results = $('<div></div>').hide().addClass(this.options.resultsClass).css({
-            position: 'absolute'
-        });
-        $('body').append(this.dom.$results);
+        if (this.options.resultsContainer) {
+            /**
+             * Assume that container is already in DOM
+             */
+            this.dom.$results = $(this.options.resultsContainer).hide().addClass(this.options.resultsClass);
+        } else {
+            /**
+             * Create DOM element to hold results, and force absolute position
+             */
+            this.dom.$results = $('<div></div>').hide().addClass(this.options.resultsClass).css({
+                position: 'absolute'
+            });
+            $('body').append(this.dom.$results);
+        }
 
         /**
          * Attach keyboard monitoring to $elem
@@ -816,9 +824,11 @@
                 }
             }
 
-            // Always recalculate position before showing since window size or
-            // input element location may have changed.
-            this.position();
+            if (this.options.autoPosition) {
+                // Recalculate position before showing since window size or
+                // input element location may have changed.
+                this.position();
+            }
 
             if (this.options.decorateResults) {
                 var newResults = this.options.decorateResults($ul);
