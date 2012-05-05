@@ -184,6 +184,13 @@ useDelimiter  (default value: false)
     comma.  For example, you may want to allow the user to enter a comma separated list of values--and 
     each value will autocomplete without erasing the other delimited values in the input field. 
 
+resultsContainer (default value: null)
+    HTML element which will contain autocomplete. It will be created and appended to body if not provided.
+    Contains of this element is replaced with new autocomplete elements each time autocomplete shows up.
+
+autoPosition (default value: true)
+    Whether to position container of autocomplete automatically or not. If set to true, it will be aligned
+    right under input.
 
 More advanced options :
 =======================
