@@ -208,6 +208,10 @@ autoPosition (default value: true)
     Whether to position container of autocomplete automatically or not. If set to true, it will be aligned
     right under input.
 
+autoFocus (default value: true)
+    Whether to focus input after item was selected or not. If set to true, input will be focused after
+    onItemSelect was called.
+
 More advanced options :
 =======================
 

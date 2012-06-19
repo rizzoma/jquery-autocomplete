@@ -84,6 +84,7 @@
         processData: null,
         getData: null,
         autoPosition: true,
+        autoFocus: true,
         onError: null
     };
 
@@ -963,7 +964,9 @@
         this.setCaret(d.start + displayValue.length + extraCaretPos);
         this.callHook('onItemSelect', { value: value, data: data });
         this.deactivate(true);
-        elem.focus();    
+        if (this.options.autoFocus) {
+            elem.focus();
+        }
     };
 
     $.Autocompleter.prototype.displayValue = function(value, data) {
