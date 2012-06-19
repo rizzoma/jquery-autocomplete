@@ -48,7 +48,6 @@
         resultsClass: 'acResults',
         selectClass: 'acSelect',
         queryParamName: 'q',
-        limitParamName: 'limit',
         extraParams: {},
         remoteDataType: false,
         lineSeparator: '\n',
@@ -84,7 +83,8 @@
         delimiterKeyCode: 188,
         processData: null,
         getData: null,
-        autoPosition: true        
+        autoPosition: true,
+        onError: null
     };
 
     /**
@@ -584,8 +584,12 @@
             $.ajax({
                 url: this.makeUrl(filter),
                 success: ajaxCallback,
-                error: function() {
-                    ajaxCallback(false);
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if($.isFunction(self.options.onError)) {
+                        self.options.onError(jqXHR, textStatus, errorThrown);
+                    } else {
+                      ajaxCallback(false);
+                    }
                 },
                 dataType: dataType
             });
@@ -626,10 +630,6 @@
             url += encodeURIComponent(param);
         } else {
             params[this.options.queryParamName] = param;
-        }
-
-        if (this.options.limitParamName && this.options.maxItemsToShow) {
-            params[this.options.limitParamName] = this.options.maxItemsToShow;
         }
 
         return makeUrl(url, params);
