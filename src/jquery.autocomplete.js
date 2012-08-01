@@ -835,17 +835,17 @@
                 }
             }
 
+            if (this.options.decorateResults) {
+                var newResults = this.options.decorateResults($ul);
+            } else {
+                var newResults = $ul;
+            }
+
             this.dom.$results.html(newResults).show();
             if (this.options.autoPosition) {
                 // Recalculate position since window size or
                 // input element location may have changed.
                 this.position();
-            }
-
-            if (this.options.decorateResults) {
-                var newResults = this.options.decorateResults($ul);
-            } else {
-                var newResults = $ul;
             }
 
             if (this.options.autoWidth) {
