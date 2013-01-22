@@ -285,12 +285,6 @@
         this.active_ = false;
 
         /**
-         * @property {boolean} Is this autocompleter allowed to finish on blur?
-         * @private
-         */
-        this.finishOnBlur_ = true;
-
-        /**
          * Sanitize options
          */
         this.options.minChars = sanitizeInteger(this.options.minChars, $.fn.autocomplete.defaults.minChars, { min: 0 });
@@ -427,9 +421,7 @@
             self.deactivate(true);
         }
         $elem.blur(function() {
-            if (self.finishOnBlur_) {
-                self.finishTimeout_ = setTimeout(onBlurFunction, 200);
-            }
+            self.finishTimeout_ = setTimeout(onBlurFunction, 200);
         });
         /**
          * Catch a race condition on form submit
@@ -810,20 +802,6 @@
     };
 
     /**
-     * Enable finish on blur event
-     */
-    $.Autocompleter.prototype.enableFinishOnBlur = function() {
-        this.finishOnBlur_ = true;
-    };
-
-    /**
-     * Disable finish on blur event
-     */
-    $.Autocompleter.prototype.disableFinishOnBlur = function() {
-        this.finishOnBlur_ = false;
-    };
-
-    /**
      * Create a results item (LI element) from a result
      * @param result
      */
@@ -831,11 +809,9 @@
         var self = this;
         var $li = $('<li>' + this.showResult(result.value, result.data) + '</li>');
         $li.data({value: result.value, data: result.data})
-            .click(function() {
+            .mousedown(function() {
                 self.selectItem($li);
             })
-            .mousedown(self.disableFinishOnBlur)
-            .mouseup(self.enableFinishOnBlur)
         ;
         return $li;
     };
