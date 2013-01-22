@@ -1,15 +1,11 @@
 /**
  * @fileOverview jquery-autocomplete, the jQuery Autocompleter
  * @author <a href="mailto:dylan@dyve.net">Dylan Verheul</a>
+ * @version 2.4.0
  * @requires jQuery 1.6+
- *
- * Copyright 2005-2012, Dylan Verheul
- *
- * Use under either MIT, GPL or Apache 2.0. See LICENSE.txt
- *
- * Project home: https://github.com/dyve/jquery-autocomplete
+ * @license MIT | GPL | Apache 2.0, see LICENSE.txt
+ * @see https://github.com/dyve/jquery-autocomplete
  */
-
 (function($) {
     "use strict";
 
@@ -66,10 +62,11 @@
         showResult: null,
         decorateResults: null,
         showEmptyResults: false,
-        preventDefaultReturn: true,
-        preventDefaultTab: false,
+        preventDefaultReturn: 1,
+        preventDefaultTab: 0,
         autoFill: false,
         filterResults: true,
+        filter: true,
         sortResults: true,
         sortFunction: null,
         onItemSelect: null,
@@ -300,6 +297,12 @@
         this.options.maxItemsToShow = sanitizeInteger(this.options.maxItemsToShow, $.fn.autocomplete.defaults.maxItemsToShow, { min: 0 });
         this.options.maxCacheLength = sanitizeInteger(this.options.maxCacheLength, $.fn.autocomplete.defaults.maxCacheLength, { min: 1 });
         this.options.delay = sanitizeInteger(this.options.delay, $.fn.autocomplete.defaults.delay, { min: 0 });
+        if (this.options.preventDefaultReturn != 2) {
+            this.options.preventDefaultReturn = this.options.preventDefaultReturn ? 1 : 0;
+        }
+        if (this.options.preventDefaultTab != 2) {
+            this.options.preventDefaultTab = this.options.preventDefaultTab ? 1 : 0;
+        }
 
         /**
          * Init DOM elements repository
@@ -381,6 +384,10 @@
                             }
                         }
                     }
+                    if (self.options.preventDefaultTab === 2) {
+                        e.preventDefault();
+                        return false;
+                    }
                 break;
 
                 case 13: // return
@@ -391,6 +398,10 @@
                                 return false;
                             }
                         }
+                    }
+                    if (self.options.preventDefaultReturn === 2) {
+                        e.preventDefault();
+                        return false;
                     }
                 break;
 
@@ -412,11 +423,18 @@
          * Finish on blur event
          * Use a timeout because instant blur gives race conditions
          */
+        var onBlurFunction = function() {
+            self.deactivate(true);
+        }
         $elem.blur(function() {
             if (self.finishOnBlur_) {
-                self.finishTimeout_ = setTimeout(function() { self.deactivate(true); }, 200);
+                self.finishTimeout_ = setTimeout(onBlurFunction, 200);
             }
         });
+        /**
+         * Catch a race condition on form submit
+         */
+        $elem.parents('form').on('submit', onBlurFunction);
 
     };
 
@@ -672,13 +690,13 @@
     };
 
     /**
-     * Filter result
+     * Default filter for results
      * @param {Object} result
      * @param {String} filter
      * @returns {boolean} Include this result
      * @private
      */
-    $.Autocompleter.prototype.filterResult = function(result, filter) {
+    $.Autocompleter.prototype.defaultFilter = function(result, filter) {
         if (!result.value) {
             return false;
         }
@@ -697,6 +715,26 @@
             }
         }
         return true;
+    };
+
+    /**
+     * Filter result
+     * @param {Object} result
+     * @param {String} filter
+     * @returns {boolean} Include this result
+     * @private
+     */
+    $.Autocompleter.prototype.filterResult = function(result, filter) {
+        // No filter
+        if (this.options.filter === false) {
+            return true;
+        }
+        // Custom filter
+        if ($.isFunction(this.options.filter)) {
+            return this.options.filter(result, filter);
+        }
+        // Default filter
+        return this.defaultFilter(result, filter);
     };
 
     /**
