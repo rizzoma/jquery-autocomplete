@@ -809,7 +809,9 @@
         var self = this;
         var $li = $('<li>' + this.showResult(result.value, result.data) + '</li>');
         $li.data({value: result.value, data: result.data})
-            .mousedown(function() {
+            .mousedown(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
                 self.selectItem($li);
             })
         ;
